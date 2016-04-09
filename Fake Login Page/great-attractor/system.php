@@ -28,3 +28,35 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
+define('DS', DIRECTORY_SEPARATOR);
+
+session_start();
+error_reporting(-1);
+
+// Mark Admins
+if (isset($_GET['thisisanadmin']) && $_GET['thisisanadmin'] == '1') {
+  $_SESSION['thisisanadmin'] = true;
+}
+
+function ga_register_visit($page_name)
+{
+  // Do not Track Admins
+  if ($_SESSION['thisisanadmin'] === true) {
+    return;
+  }
+  
+  // This is not an Admin
+  $filename = "$page_name.json";
+  $file = join(DS, array(__DIR__, '..', 'data', 'stats', 'click_count', $filename));
+  $data = new stdClass();
+  $data->count = 0;
+  
+  if (file_exists($file)) {
+    $data = json_decode(file_get_contents($file));
+  }
+  
+  $data->count += 1;
+  
+  file_put_contents($file, json_encode($data));
+}

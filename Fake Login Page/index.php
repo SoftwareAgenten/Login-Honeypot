@@ -2,6 +2,8 @@
 
 include_once('great-attractor/system.php');
 
+ga_register_visit('index');
+
 ?><!doctype html>
 <html>
   <head>
