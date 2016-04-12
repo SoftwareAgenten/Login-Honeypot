@@ -77,6 +77,8 @@ function ga_register_request($page_name)
 
 function ga_register_visit($page_name)
 {
+  global $config, $paths;
+  
   // Do not Track Admins
   if ($_SESSION['thisisanadmin'] === true) {
     return;
