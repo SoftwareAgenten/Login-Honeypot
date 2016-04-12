@@ -34,9 +34,45 @@ define('DS', DIRECTORY_SEPARATOR);
 session_start();
 error_reporting(-1);
 
-// Mark Admins
+// ===========
+// = Utility =
+// ===========
+
+function make_path($components, $force_create)
+{
+  $path = join(DS, $components);
+  
+  if ($force_create && !file_exists($path)) {
+    mkdir($path, 0755, true);
+  }
+  
+  return $path;
+}
+
+// =========
+// = Paths =
+// =========
+
+$paths = new stdClass();
+$paths->root = make_path(array(__DIR__, '..'));
+$paths->data = make_path(array($paths->root, 'data'), true);
+$paths->stats = make_path(array($paths->data, 'stats'), true);
+$paths->requests = make_path(array($paths->data, 'requests'), true);
+
+// ===============
+// = Mark Admins =
+// ===============
+
 if (isset($_GET['thisisanadmin']) && $_GET['thisisanadmin'] == '1') {
   $_SESSION['thisisanadmin'] = true;
+}
+
+// =================
+// = Register Data =
+// =================
+
+function ga_register_request($page_name)
+{
 }
 
 function ga_register_visit($page_name)
@@ -48,7 +84,8 @@ function ga_register_visit($page_name)
   
   // This is not an Admin
   $filename = "$page_name.json";
-  $file = join(DS, array(__DIR__, '..', 'data', 'stats', 'click_count', $filename));
+  $location = make_path(array($paths->stats, 'click_count'), true);
+  $file = make_path(array($location, $filename));
   $data = new stdClass();
   $data->count = 0;
   

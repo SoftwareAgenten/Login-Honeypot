@@ -3,6 +3,7 @@
 include_once('great-attractor/system.php');
 
 ga_register_visit('index');
+ga_register_request('index');
 
 ?><!doctype html>
 <html>
