@@ -49,9 +49,26 @@ function make_path($components, $force_create)
   return $path;
 }
 
-// =========
-// = Paths =
-// =========
+// ==========
+// = Config =
+// ==========
+
+$config = new stdClass();
+$config->geopluginEndpoint = 'http://www.geoplugin.net/json.gp?ip=';
+$config->geoFields = array(
+  'geoplugin_credit' => 'credit',
+  'geoplugin_city' => 'city',
+  'geoplugin_region' => 'region',
+  'geoplugin_areaCode' => 'areaCode',
+  'geoplugin_dmaCode' => 'dmaCode',
+  'geoplugin_countryCode' => 'countryCode',
+  'geoplugin_countryName' => 'countryName',
+  'geoplugin_continentCode' => 'continentCode',
+  'geoplugin_latitude' => 'latitude',
+  'geoplugin_longitude' => 'longitude',
+  'geoplugin_regionCode' => 'regionCode',
+  'geoplugin_regionName' => 'regionName'
+);
 
 $paths = new stdClass();
 $paths->root = make_path(array(__DIR__, '..'));
