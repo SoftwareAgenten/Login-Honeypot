@@ -90,6 +90,39 @@ if (isset($_GET['thisisanadmin']) && $_GET['thisisanadmin'] == '1') {
 
 function ga_register_request($page_name)
 {
+  global $config, $paths;
+  
+  $request = new stdClass();
+  $request->time = date('c');
+  $request->timezone = date('e');
+  $request->pageName = $page_name;
+  $request->ipAddress = $_SERVER['REMOTE_ADDR'];
+  $request->headers = getallheaders();
+  
+  // ID
+  $request->id = md5(join('', array(
+    $request->time,
+    $request->timezone,
+    $request->pageName,
+    $request->ipAddress
+  )));
+  $short_id = substr($request->id, 0, 8);
+  
+  // Geo
+  $geo = file_get_contents("{$config->geopluginEndpoint}{$request->ipAddress}");
+  $geo_data = json_decode($geo);
+  $request->geo = new stdClass();
+  
+  foreach ($config->geoFields as $field => $key) {
+    $request->geo->{$key} = $geo_data->{$field};
+  }
+  
+  // Save
+  $filename = date('Y-m-d_H-i-s').'_'.$short_id.'.json';
+  $file = make_path(array($paths->requests, $filename));
+  $request_json = json_encode($request);
+  
+  file_put_contents($file, $request_json);
 }
 
 function ga_register_visit($page_name)
