@@ -37,6 +37,7 @@ error_reporting(-1);
 if (!isset($_SESSION['userid'])) {
   $_SESSION['userid'] = uniqid();
   $_SESSION['userrequestids'] = array();
+  $_SESSION['clickedpages'] = array();
 }
 
 // ===========
@@ -176,8 +177,8 @@ function ga_register_visit()
     return;
   }
   
-  // Count one Click per Session
-  if (!empty($_SESSION['userrequestids'])) {
+  // Count one Click per Session per Page
+  if (in_array($GLOBALS['pagename'], $_SESSION['clickedpages'])) {
     return;
   }
   
@@ -197,4 +198,7 @@ function ga_register_visit()
   $data->count += 1;
   
   file_put_contents($file, json_encode($data));
+  
+  
+  $_SESSION['clickedpages'][] = $GLOBALS['pagename'];
 }
