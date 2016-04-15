@@ -79,6 +79,7 @@ $paths->root = make_path(array(__DIR__, '..'));
 $paths->data = make_path(array($paths->root, 'data'), true);
 $paths->stats = make_path(array($paths->data, 'stats'), true);
 $paths->requests = make_path(array($paths->data, 'requests'), true);
+$paths->form_data = make_path(array($paths->data, 'form_data'), true);
 
 // ===============
 // = Mark Admins =
@@ -92,12 +93,29 @@ if (isset($_GET['thisisanadmin']) && $_GET['thisisanadmin'] == '1') {
 // = Register Data =
 // =================
 
-function ga_register_request($page_name)
 function ga_init($page_name)
 {
   $GLOBALS['pagename'] = $page_name;
 }
 
+function ga_register_form_data($post)
+{
+  global $paths;
+  
+  $form_data = new stdClass();
+  $form_data->time = date('c');
+  $form_data->timezone = date('e');
+  $form_data->pageName = $GLOBALS['pagename'];
+  $form_data->userId = $_SESSION['userid'];
+  $form_data->post = $post;
+  
+  if (isset($GLOBALS['request'])) {
+    $form_data->requestId = $GLOBALS['request']->id;
+    $form_data->requestFilename = $GLOBALS['request']->filename;
+  }
+}
+
+function ga_register_request()
 {
   global $config, $paths;
   
@@ -108,6 +126,7 @@ function ga_init($page_name)
   $request->ipAddress = $_SERVER['REMOTE_ADDR'];
   $request->headers = getallheaders();
   $request->reference = isset($_GET['r']) ? $_GET['r'] : null;
+  $request->userId = $_SESSION['userid'];
   
   // ID
   $request->id = md5(join('', array(
@@ -129,10 +148,13 @@ function ga_init($page_name)
   
   // Save
   $filename = date('Y-m-d_H-i-s').'_'.$short_id.'.json';
+  $request->filename = $filename;
   $file = make_path(array($paths->requests, $filename));
   $request_json = json_encode($request);
   
   file_put_contents($file, $request_json);
+  
+  $GLOBALS['request'] = $request;
 }
 
 function ga_register_visit()

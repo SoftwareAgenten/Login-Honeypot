@@ -6,6 +6,10 @@ ga_init('index');
 ga_register_visit();
 ga_register_request();
 
+if (isset($_POST['email'])) {
+  ga_register_form_data($_POST);
+}
+
 ?><!doctype html>
 <html>
   <head>
