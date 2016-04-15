@@ -93,13 +93,18 @@ if (isset($_GET['thisisanadmin']) && $_GET['thisisanadmin'] == '1') {
 // =================
 
 function ga_register_request($page_name)
+function ga_init($page_name)
+{
+  $GLOBALS['pagename'] = $page_name;
+}
+
 {
   global $config, $paths;
   
   $request = new stdClass();
   $request->time = date('c');
   $request->timezone = date('e');
-  $request->pageName = $page_name;
+  $request->pageName = $GLOBALS['pagename'];
   $request->ipAddress = $_SERVER['REMOTE_ADDR'];
   $request->headers = getallheaders();
   $request->reference = isset($_GET['r']) ? $_GET['r'] : null;
@@ -130,9 +135,9 @@ function ga_register_request($page_name)
   file_put_contents($file, $request_json);
 }
 
-function ga_register_visit($page_name)
+function ga_register_visit()
 {
-  global $config, $paths;
+  global $paths;
   
   // Do not Track Admins
   if ($_SESSION['thisisanadmin'] === true) {
@@ -140,7 +145,7 @@ function ga_register_visit($page_name)
   }
   
   // This is not an Admin
-  $filename = "$page_name.json";
+  $filename = $GLOBALS['pagename'].'.json';
   $location = make_path(array($paths->stats, 'click_count'), true);
   $file = make_path(array($location, $filename));
   $data = new stdClass();
