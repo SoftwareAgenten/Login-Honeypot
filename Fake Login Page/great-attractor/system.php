@@ -36,6 +36,7 @@ error_reporting(-1);
 
 if (!isset($_SESSION['userid'])) {
   $_SESSION['userid'] = uniqid();
+  $_SESSION['userrequestids'] = array();
 }
 
 // ===========
@@ -113,6 +114,13 @@ function ga_register_form_data($post)
     $form_data->requestId = $GLOBALS['request']->id;
     $form_data->requestFilename = $GLOBALS['request']->filename;
   }
+  
+  // Save
+  $filename = $GLOBALS['request']->id.'.json';
+  $file = make_path(array($paths->form_data, $filename));
+  $form_data_json = json_encode($form_data);
+  
+  file_put_contents($file, $form_data_json);
 }
 
 function ga_register_request()
@@ -155,16 +163,22 @@ function ga_register_request()
   file_put_contents($file, $request_json);
   
   $GLOBALS['request'] = $request;
+  $_SESSION['userrequestids'][] = $request->id;
 }
 
 function ga_register_visit()
 {
-  global $paths;
-  
   // Do not Track Admins
   if ($_SESSION['thisisanadmin'] === true) {
     return;
   }
+  
+  // Count one Click per Session
+  if (!empty($_SESSION['userrequestids'])) {
+    return;
+  }
+  
+  global $paths;
   
   // This is not an Admin
   $filename = $GLOBALS['pagename'].'.json';
