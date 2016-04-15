@@ -16,7 +16,7 @@ ga_register_request();
   <body>
     <h1>Login</h1>
     
-    <form action="post">
+    <form method="post">
       <label for="email">Email Address</label>
       <input type="email" name="email" id="email">
       
