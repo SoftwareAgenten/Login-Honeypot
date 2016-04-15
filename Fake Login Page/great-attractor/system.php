@@ -116,7 +116,7 @@ function ga_register_form_data($post)
   }
   
   // Save
-  $filename = $GLOBALS['request']->id.'.json';
+  $filename = $GLOBALS['pagename'].'_'.$GLOBALS['request']->id.'.json';
   $file = make_path(array($paths->form_data, $filename));
   $form_data_json = json_encode($form_data);
   
