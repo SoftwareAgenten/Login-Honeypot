@@ -98,6 +98,7 @@ function ga_register_request($page_name)
   $request->pageName = $page_name;
   $request->ipAddress = $_SERVER['REMOTE_ADDR'];
   $request->headers = getallheaders();
+  $request->reference = isset($_GET['r']) ? $_GET['r'] : null;
   
   // ID
   $request->id = md5(join('', array(
