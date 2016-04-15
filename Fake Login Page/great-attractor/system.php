@@ -135,6 +135,7 @@ function ga_register_request()
   $request->headers = getallheaders();
   $request->reference = isset($_GET['r']) ? $_GET['r'] : null;
   $request->userId = $_SESSION['userid'];
+  $request->previousRequestIds = $_SESSION['userrequestids'];
   
   // ID
   $request->id = md5(join('', array(
