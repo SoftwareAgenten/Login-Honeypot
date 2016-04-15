@@ -15,7 +15,7 @@ if (isset($_POST['email'])) {
   <head>
     <meta charset="utf-8" />
     <title>Login</title>
-    <link rel="stylesheet" href="data/assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css">
   </head>
   <body>
     <h1>Login</h1>
