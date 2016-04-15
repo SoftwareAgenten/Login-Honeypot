@@ -103,9 +103,10 @@ function ga_register_form_data($post)
 {
   global $paths;
   
+  $time = time();
   $form_data = new stdClass();
-  $form_data->time = date('c');
-  $form_data->timezone = date('e');
+  $form_data->time = date('c', $time);
+  $form_data->timezone = date('e', $time);
   $form_data->pageName = $GLOBALS['pagename'];
   $form_data->userId = $_SESSION['userid'];
   $form_data->post = $post;
@@ -127,9 +128,10 @@ function ga_register_request()
 {
   global $config, $paths;
   
+  $time = time();
   $request = new stdClass();
-  $request->time = date('c');
-  $request->timezone = date('e');
+  $request->time = date('c', $time);
+  $request->timezone = date('e', $time);
   $request->pageName = $GLOBALS['pagename'];
   $request->ipAddress = $_SERVER['REMOTE_ADDR'];
   $request->headers = getallheaders();
@@ -156,7 +158,7 @@ function ga_register_request()
   }
   
   // Save
-  $filename = date('Y-m-d_H-i-s').'_'.$short_id.'.json';
+  $filename = date('Y-m-d_H-i-s', $time).'_'.$short_id.'.json';
   $request->filename = $filename;
   $file = make_path(array($paths->requests, $filename));
   $request_json = json_encode($request);
