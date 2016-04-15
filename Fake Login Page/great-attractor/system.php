@@ -34,6 +34,10 @@ define('DS', DIRECTORY_SEPARATOR);
 session_start();
 error_reporting(-1);
 
+if (!isset($_SESSION['userid'])) {
+  $_SESSION['userid'] = uniqid();
+}
+
 // ===========
 // = Utility =
 // ===========
